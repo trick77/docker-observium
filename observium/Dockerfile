@@ -33,7 +33,7 @@ RUN ln -sf /dev/stdout /var/log/apache2/access.log && \
 VOLUME /opt/observium/rrd
 EXPOSE 8080/tcp
 
-COPY bin/create-config.php ./
+COPY bin/generate-config.php ./
 COPY entrypoint.sh /usr/local/bin
 
 ENTRYPOINT /usr/local/bin/entrypoint.sh
