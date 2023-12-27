@@ -1,0 +1,110 @@
+version: '3.9'
+
+services:
+
+  webserver:
+    build: .
+    container_name: webserver
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - "127.0.0.1:8081:8080"
+    healthcheck:
+      test: timeout 10s bash -c ':> /dev/tcp/127.0.0.1/8080' || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      - mariadb
+    volumes:
+      - ./conf/observium:/conf:ro,Z
+      - rrd-data:/opt/observium/rrd/
+      - smokeping-data:/var/lib/smokeping/:ro,Z
+      - smokeping-config:/etc/smokeping/config.d/
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.discover-all.schedule: "@every 6h"
+      ofelia.job-exec.discover-all.no-overlap: "true"
+      ofelia.job-exec.discover-all.user: "www-data"
+      ofelia.job-exec.discover-all.command: "/bin/bash -c \"/opt/observium/observium-wrapper discovery -h all\""
+      ofelia.job-exec.discover-new.schedule: "@every 5m"
+      ofelia.job-exec.discover-new.no-overlap: "true"
+      ofelia.job-exec.discover-new.user: "www-data"
+      ofelia.job-exec.discover-new.command: "/bin/bash -c \"/opt/observium/observium-wrapper discovery --host new\""
+      ofelia.job-exec.poll.schedule: "@every 5m"
+      ofelia.job-exec.poll.no-overlap: "true"
+      ofelia.job-exec.poll.user: "www-data"
+      ofelia.job-exec.poll.command: "/bin/bash -c \"/opt/observium/observium-wrapper poller\""
+      ofelia.job-exec.cleanup-logs.schedule: "13 5 * * *"
+      ofelia.job-exec.cleanup-logs.no-overlap: "true"
+      ofelia.job-exec.cleanup-logs.user: "www-data"
+      ofelia.job-exec.cleanup-logs.command: "/bin/bash -c \"/opt/observium/housekeeping.php -ysel\""
+      ofelia.job-exec.cleanup-rrds.schedule: "47 4 * * *"
+      ofelia.job-exec.cleanup-rrds.no-overlap: "true"
+      ofelia.job-exec.cleanup-rrds.user: "www-data"
+      ofelia.job-exec.cleanup-rrds.command: "/bin/bash -c \"/opt/observium/housekeeping.php -yrptb\""
+      ofelia.job-exec.smokeping-config.schedule: "@every 5m"
+      ofelia.job-exec.smokeping-config.user: "root"
+      ofelia.job-exec.smokeping-config.command: "/bin/bash -c \"php /opt/observium/scripts/generate-smokeping.php > /etc/smokeping/config.d/Targets\""
+      traefik.enable: true
+      traefik.http.routers.observium.rule: "Host(`${OBSERVIUM_FQDN}`)"
+      traefik.http.routers.observium.entrypoints: "websecure"
+      traefik.http.routers.observium.tls.certresolver: "letsencrypt"
+    networks:
+      - traefik
+      - observium
+
+  mariadb:
+    image: mariadb:11
+    container_name: db
+    restart: unless-stopped
+    stop_grace_period: 45s
+    healthcheck:
+      test: healthcheck.sh --su-mysql --connect --innodb_initialized
+      start_period: 60s
+      interval: 1m
+      timeout: 5s
+      retries: 3
+    environment:
+      TZ: ${TZ}
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_INITDB_SKIP_TZINFO: 1
+      MARIADB_MYSQL_LOCALHOST_USER: 1
+    ports:
+      - "${SQL_PORT:-127.0.0.1:13306}:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql/
+      - /run/mysqld:/var/run/mysqld/
+      - ./conf/mariadb/:/etc/mysql/conf.d/:ro,Z
+    networks:
+      - observium
+
+  scheduler:
+    image: mcuadros/ofelia:latest
+    container_name: observium-scheduler
+    restart: always
+    command: daemon --docker
+    environment:
+      - TZ=${TZ}
+    depends_on:
+      - webserver
+      - mariadb
+    labels:
+      ofelia.enabled: "true"
+    security_opt:
+      - label=disable
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+  mariadb-data:
+  rrd-data:
+
+networks:
+  traefik:
+    external: true
+  observium:
+    external: false
