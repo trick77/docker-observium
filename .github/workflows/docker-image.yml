@@ -7,16 +7,21 @@ on:
     branches: [ "master" ]
 
 jobs:
-
-  build:
-
+  docker_image_builds:
+    strategy:
+      matrix:
+        images:
+          - "observium"
+          - "smokeping"
     runs-on: ubuntu-latest
-
-    steps:
-    - name: Build Observium image
-      uses: docker/build-push-action@v3
-      with:
-        context: ./observium
-        push: false
-        tags: ${{ steps.prep.outputs.tags }}
-        
+    steps:    
+    - uses: actions/checkout@v4
+    - name: Setup Docker
+      run: |
+          curl -sSL https://get.docker.com/ | CHANNEL=stable sudo sh
+          sudo service docker start
+    - name: Build Docker Images
+      run: |
+        docker compose build ${image}    
+      env:
+        image: ${{ matrix.images }}   
