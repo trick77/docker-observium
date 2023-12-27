@@ -30,7 +30,7 @@ Unfortunatley, no proper docs at this time...
 - Show how to use the entrypoint to add/remove/rename devices
 - Explain the `__` and `___` in .env
 - Alerts have to be added manually and that there is no import mechanism, at least not in CE. Maybe provide a template?
-- Maybe provide a generate-config.sh?
+- Maybe provide a generate-env.sh to generate the basic settings?
 - Easy variable debugging using the Full Dump menu option in Observium's UI
 - Explain why there is no issues tab for this project
 - Provide a Traefik example since those are somewhat hard to find
