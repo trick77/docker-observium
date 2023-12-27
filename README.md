@@ -36,5 +36,8 @@ Unfortunatley, no proper docs at this time...
 - Provide a Traefik example since those are somewhat hard to find
 - Show how to create the required traefik network using `docker network traefik create` or something
 - Why not LibreNMS?
+- Add a license
+- CI for the docker images using GH workflows?
+- Provide images? Probably not.
 - Links to contributors/projects
 
