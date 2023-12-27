@@ -13,12 +13,13 @@ This repository provides a Dockerized version of Observium, a network monitoring
 
 ## Prerequisites
 1. Docker
-2. Probably Traefik
+1. Probably Traefik
+1. Devices you can monitor using SNMP and maybe even Observium's UNIX agent
 
 ## Usage
 
 1. Edit `observium/.env` and set passwords and stuff
-1. Edit `devices.txt` to add one or more devices during container startup
+1. Edit `observium/devices.txt` to add one or more devices during container startup
 1. Start the containers with `docker compose up -d`
 1. Watch for errors with `docker compose logs -f`
 
@@ -34,4 +35,6 @@ Unfortunatley, no proper docs at this time...
 - Explain why there is no issues tab for this project
 - Provide a Traefik example since those are somewhat hard to find
 - Show how to create the required traefik network using `docker network traefik create` or something
+- Why not LibreNMS?
 - Links to contributors/projects
+
