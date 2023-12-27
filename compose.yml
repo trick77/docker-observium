@@ -1,0 +1,9 @@
+version: '3.9'
+
+include:
+  - observium/compose.yml
+  - smokeping/compose.yml
+
+volumes:
+  smokeping-data:
+  smokeping-config:
