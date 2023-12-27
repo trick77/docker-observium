@@ -13,8 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Prepare
     - name: Build Observium image
       uses: docker/build-push-action@v3
       with:
