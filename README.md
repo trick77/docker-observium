@@ -38,6 +38,8 @@ Unfortunatley, no proper docs at this time...
 - Why not LibreNMS?
 - Add a license
 - CI for the docker images using GH workflows?
+- Backup
+- Updates
 - Provide images? Probably not.
 - Links to contributors/projects
 
