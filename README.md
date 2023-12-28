@@ -23,9 +23,9 @@ This repository provides a Dockerized version of Observium, a network monitoring
 1. Start the containers with `docker compose up -d`
 1. Watch for errors with `docker compose logs -f`
 
-## Traefik reverse-proxy setup
+## Traefik reverse-proxy
 
-Here's how to run Traefik in front of Observium and probably every web app you want to securely expose on the Interwebs.
+Here's how to run Traefik in front of Observium and probably every Docker web app you want to securely expose on the Interwebs.
 
 This service config features:
 - Redirects insecure requests to HTTPS
