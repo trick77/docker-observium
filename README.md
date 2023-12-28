@@ -9,6 +9,7 @@ This repository provides a Dockerized version of Observium, a network monitoring
 - Does not use supervisord
 - No log files, no log file rotation - everything is sent to stdout
 - Uses Traefik reverse-proxy for easy ACME certificate generation
+- Creates daily backups
 - Smokeping!
 
 ## Prerequisites
@@ -108,9 +109,7 @@ Unfortunatley, no proper docs at this time...
 - Show how to create the required traefik network using `docker network traefik create` or something
 - Why not LibreNMS?
 - Add a license
-- CI for the docker images using GH workflows?
-- Backup
-- Updates
-- Provide images? Probably not.
+- Restore instructions
+- Updating
 - Links to contributors/projects
 
