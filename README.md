@@ -34,9 +34,9 @@ This service config features:
 - Dumps access logs to the container's stdout
 - Reads environment variables from an `.env` file
 
-The required Docker bridge is defined externally and has to created with `docker network create traefik`. It's also possible to add IPv6 network support this way.
+The required Docker bridge is defined externally and has to created with `docker network create traefik`. It's also possible to add IPv6 network support this way (not shown).
 
-#### **`compose.yml`**
+**`compose.yml`**
 ``` yml
 version: '3'
 
