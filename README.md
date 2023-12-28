@@ -13,8 +13,8 @@ This repository provides a Dockerized version of Observium, a network monitoring
 
 ## Prerequisites
 1. Docker
-1. Probably Traefik
-1. Devices you can monitor using SNMP and maybe even Observium's UNIX agent
+1. Traefik
+1. Devices you want to monitor using SNMP and maybe even Observium's Unix agent
 
 ## Usage
 
@@ -22,6 +22,77 @@ This repository provides a Dockerized version of Observium, a network monitoring
 1. Edit `observium/devices.txt` to add one or more devices during container startup
 1. Start the containers with `docker compose up -d`
 1. Watch for errors with `docker compose logs -f`
+
+## Traefik reverse-proxy setup
+
+Here's how to run Traefik in front of Observium and probably every web app you want to securely expose on the Interwebs.
+
+This service config features:
+- Redirects insecure requests to HTTPS
+- Runs the Traefik dashboard on its own FQDN, protected by basic authentication (use credentials traefik/traefik)
+- Utilizes ACME TLS challenge to automatically fetch certificates for your domains
+- Dumps access logs to the container's stdout
+- Reads environment variables from an `.env` file
+
+The required Docker bridge is defined externally and has to created with `docker network create traefik`. It's also possible to add IPv6 network support this way.
+
+compose.yml
+```yml
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    restart: always
+    environment:
+      - PUID=65534
+      - PGID=65534
+      - TZ=${TIMEZONE}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+    command:
+      - "--log.level=INFO"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=traefik"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.asDefault=true"
+      - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
+      - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--accesslog=true"
+      - "--accessLog.fields.headers.names.User-Agent=keep"
+      - "--ping"
+      - "--global.checkNewVersion=true"
+      - "--global.sendAnonymousUsage=false"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mydashboard.rule=Host(`${TRAEFIK_DASHBOARD_FQDN}`)"
+      - "traefik.http.routers.mydashboard.service=api@internal"
+      - "traefik.http.routers.mydashboard.middlewares=myauth"
+      - "traefik.http.middlewares.myauth.basicauth.users=traefik:$$2y$$05$$uuzfkHu9qpLnslD9reMTEu7KsTKaM5Gzy2jD77/5ciGO7mcVXxHB2"
+    healthcheck:
+      test: "traefik healthcheck --ping"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./letsencrypt:/letsencrypt
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
+
+```
 
 ## Documentation TODO's
 
