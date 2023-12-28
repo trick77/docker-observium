@@ -7,7 +7,7 @@ services:
     container_name: smokeping
     restart: unless-stopped
     depends_on:
-      - webserver
+      - httpd
     volumes:
       - smokeping-data:/var/lib/smokeping/
       - smokeping-config:/etc/smokeping/config.d/

@@ -2,9 +2,9 @@ version: '3.9'
 
 services:
 
-  webserver:
+  httpd:
     build: .
-    container_name: webserver
+    container_name: httpd
     restart: unless-stopped
     env_file: ./.env
     ports:
@@ -90,7 +90,7 @@ services:
     environment:
       - TZ=${TZ}
     depends_on:
-      - webserver
+      - httpd
       - mariadb
     labels:
       ofelia.enabled: "true"

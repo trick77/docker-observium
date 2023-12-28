@@ -96,7 +96,7 @@ if [ "$1" != "" ]; then
     echo "* Executing '$@'"
     exec "$@"
 elif [ -f "/usr/sbin/apache2ctl" ]; then
-    echo "* Starting webserver..."
+    echo "* Starting httpd..."
     exec apache2ctl -D FOREGROUND
 else
     echo "Unknown instructions. Exiting..."

@@ -11,10 +11,10 @@ jobs:
     strategy:
       matrix:
         images:
-          - "webserver"
+          - "httpd"
           - "smokeping"
     runs-on: ubuntu-latest
-    steps:    
+    steps:
     - uses: actions/checkout@v4
     - name: Setup Docker
       run: |
@@ -22,6 +22,6 @@ jobs:
           sudo service docker start
     - name: Build Docker Images
       run: |
-        docker compose build ${image}    
+        docker compose build ${image}
       env:
-        image: ${{ matrix.images }}   
+        image: ${{ matrix.images }}
