@@ -10,10 +10,8 @@ fi
 show_observium_info() {
   echo "****************************************************"
   echo "* VERSION: $(cat ./VERSION)"
-  if [ "$SHOW_ADMIN_INFO_DURING_STARTUP" = "yes" ]; then
-    echo "* OBSERVIUM_ADMIN_USER: ${OBSERVIUM_ADMIN_USER}"
-    echo "* OBSERVIUM_ADMIN_PASSWORD: ${OBSERVIUM_ADMIN_PASSWORD}"
-  fi
+  echo "* OBSERVIUM_ADMIN_USER: ${OBSERVIUM_ADMIN_USER}"
+  echo "* OBSERVIUM_ADMIN_PASSWORD: ${OBSERVIUM_ADMIN_PASSWORD}"
   echo "****************************************************"
 }
 
@@ -31,19 +29,20 @@ check_db_connect() {
   echo "* Successfully connected to database"
 }
 
-init_db_if_required() {
+set_dir_permissions() {
+     chown -R www-data:www-data ./rrd
+}
+
+init_if_required() {
   tables=`mysql -h db -u ${DB_USER} --password=${DB_PASSWORD} -e "show tables" ${DB_NAME} 2>/dev/null`
   if [ -z "$tables" ]
   then
-     echo "* Setting ./rrd directory to www-data:www-data"
-     chown -v www-data:www-data ./rrd
      echo "* Database schema initialization required..."
      ./discovery.php -u
      echo "* Creating admin user..."
      ./adduser.php "${OBSERVIUM_ADMIN_USER}" "${OBSERVIUM_ADMIN_PASSWORD}" 10
   else
-    echo "* Database schema already initializied, initialization not required!"
-    sleep 5
+    echo "* Database schema already initializied, no initialization required!"
   fi
 }
 
@@ -87,9 +86,10 @@ generate_smokeping_config() {
 
 check_db_connect
 create_config
-init_db_if_required
+init_if_required
 import_devices
 generate_smokeping_config
+set_dir_permissions
 show_observium_info
 
 if [ "$1" != "" ]; then

@@ -82,13 +82,13 @@ services:
     networks:
       - observium
 
-  scheduler:
+  ofelia:
     image: mcuadros/ofelia:latest
-    container_name: observium-scheduler
+    container_name: scheduler
     restart: always
     command: daemon --docker
     environment:
-      - TZ=${TZ}
+      TZ: ${TZ}
     depends_on:
       - httpd
       - mariadb
@@ -98,6 +98,37 @@ services:
       - label=disable
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  backup:
+    image: mariadb:11
+    container_name: backup
+    restart: unless-stopped
+    command: tail -f /dev/null
+    env_file: ./.env
+    volumes:
+      - rrd-data:/backup/observium-data
+      - smokeping-data:/backup/smokeping-data
+      - ../backup:/backup/destination
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.backup-rrd.schedule: "@every 24h"
+      ofelia.job-exec.backup-rrd.no-overlap: "true"
+      ofelia.job-exec.backup-rrd.user: "root"
+      ofelia.job-exec.backup-rrd.command: "/bin/sh -c \"tar -czf /backup/destination/rrd_$(date '+%Y%m%d%H%M%S').tar.gz -C /backup observium-data smokeping-data && ls -t /backup/destination/*.tar.gz"
+      ofelia.job-exec.backup-rrd-cleanup.schedule: "@every 24h"
+      ofelia.job-exec.backup-rrd-cleanup.no-overlap: "true"
+      ofelia.job-exec.backup-rrd-cleanup.user: "root"
+      ofelia.job-exec.backup-rrd-cleanup.command: "/bin/sh -c \"ls -t /backup/destination/rrd_*.gz | tail -n +10 | xargs rm -f\""
+      ofelia.job-exec.backup-db.schedule: "@every 24h"
+      ofelia.job-exec.backup-db.no-overlap: "true"
+      ofelia.job-exec.backup-db.user: "root"
+      ofelia.job-exec.backup-db.command: "/bin/sh -c \"mariadb-dump --user ${DB_USER} -p${DB_PASSWORD} --host db ${DB_NAME} | gzip > /backup/destination/db_$(date '+%Y%m%d%H%M%S').sql.gz\""
+      ofelia.job-exec.backup-db-cleanup.schedule: "@every 24h"
+      ofelia.job-exec.backup-db-cleanup.no-overlap: "true"
+      ofelia.job-exec.backup-db-cleanup.user: "root"
+      ofelia.job-exec.backup-db-cleanup.command: "/bin/sh -c \"ls -t /backup/destination/db_*.gz | tail -n +10 | xargs rm -f\""
+    networks:
+      - observium
 
 volumes:
   mariadb-data:
