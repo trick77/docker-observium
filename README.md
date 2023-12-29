@@ -51,12 +51,7 @@ Add or overwrite Observium settings in the `observium/.env` file using the `OBSE
 | `_`                             | Using a single underscore (`_`) will include an underscore in the key.           |
 | `__`                            | Using a double underscore (`__`) will add the value to an associative array      |
 | `___`                           | To represent a dash in the key, escape it using triple underscores (`___`).      |
-| `__0`                           | Using a double underscore with a number (`__0`) will add the value to an indexed/sequential array at the indicated index. |
-
-- Using a single underscore (`_`) will include an underscore in the key (e.g., `OBSERVIUM__enable_bgp=0`).
-- Using a double underscore (`__`) will add the value to an associative array with the given key.
-- Using a double underscore with a number (`__0`) will add the value to an indexed/sequential array at the indicated index.
-- Dashes cannot be used in environment variables. To represent a dash in the key, escape it using triple underscores (`___`).
+| `__0`                           | Using a double underscore with a number (`__0`) will add the value to sequential array at the indicated index. |
 
 Refer to the example below:
 ``` env
