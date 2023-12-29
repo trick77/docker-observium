@@ -16,15 +16,15 @@ This repository provides a Dockerized version of Observium, a network monitoring
 
 ## Prerequisites
 1. Docker
-1. Traefik
+1. Traefik reverse-proxy (example configruation provided below)
 1. Devices you want to monitor using SNMP and maybe even Observium's Unix agent
 
 ## Usage
 
-1. Edit `observium/.env` and set passwords and stuff
-1. Edit `observium/conf/observium/devices.txt` to add one or more devices during container startup
+1. Edit `observium/.env` to set passwords and other configuration details
+1. Edit `observium/conf/observium/devices.txt` to add SNMP devices that should be imported during container startup
 1. Start the containers with `docker compose up -d`
-1. Watch for errors with `docker compose logs -f`
+1. Monitor for errors with `docker compose logs -f`
 
 ## Configuration
 
@@ -36,11 +36,11 @@ Only environment variables in the `observium/.env` file with the `OBSERVIUM__` p
 Add or overwrite Observium settings in the `observium/.env` file using the `OBSERVIUM__` prefix. Follow these mapping instructions:
 
 - Using a single underscore (`_`) will include an underscore in the key (e.g., `OBSERVIUM__int_core=0`).
-- Using a double underscore (`__`) will generate an associative array with the given key.
+- Using a double underscore (`__`) will add the value to an associative array with the given key.
 - Dashes cannot be used in environment variables. To represent a dash in the key, escape it using triple underscores (`___`).
+- Using a number at the end of the key indicates that the value will be added to an indexed/sequential array.
 
 Refer to the example below:
-
 ```env
 OBSERVIUM__base_url=https://${OBSERVIUM_FQDN}
 OBSERVIUM__ping__retries=5
@@ -54,8 +54,7 @@ OBSERVIUM__bad_if_regexp__0='/^veth.*/'
 OBSERVIUM__bad_if_regexp__1='/^br-.*/'
 ```
 
-- If there is a number at the end of the key, it will be used to construct an indexed/sequential array.
-- Ensure that environment variables are configured appropriately, taking into account the specific syntax requirements outlined above.
+Ensure that environment variables are configured appropriately, taking into account the specific syntax requirements outlined above.
 
 For further details on these configurations and their impact on Observium's behavior, consult the Observium documentation
 or the comments provided in the `observium/.env`  file. Adjust the settings according to your deployment needs.
