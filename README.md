@@ -52,7 +52,7 @@ Add or overwrite Observium settings in the `observium/.env` file using the `OBSE
 - Dashes cannot be used in environment variables. To represent a dash in the key, escape it using triple underscores (`___`).
 
 Refer to the example below:
-```env
+``` env
 OBSERVIUM__base_url=https://${OBSERVIUM_FQDN}
 OBSERVIUM__ping__retries=5
 OBSERVIUM__poller___wrapper__threads=2
@@ -85,7 +85,7 @@ In this service configuration, behold:
 The required Docker bridge is defined externally and has to created with `docker network create traefik`. It's also possible to add IPv6 network support this way (not shown here).
 
 ``` yml
-version: '3'
+version: '3.9'
 
 services:
   traefik:
