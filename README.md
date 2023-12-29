@@ -4,6 +4,8 @@
 
 This repo delivers Observium, a network monitoring powerhouse, in a sleek Dockerized package. Spin up Observium in a flash within a containerized realm for seamless operation.
 
+![Observium Image](https://www.observium.org/images/ss-dev-linux.png){:width="320px"}
+
 ## Features
 
 - **Molds** Observium's behavior on-the-fly by defining config settings through environment variables in the `observium/.env` file, seamlessly translated to PHP at runtime.
