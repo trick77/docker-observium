@@ -9,7 +9,7 @@ This repository delivers [Observium](https://www.observium.org/), a network moni
 ## Features
 
 - **Molds** Observium's behavior on-the-fly by defining config settings through environment variables in the `observium/.env` file, seamlessly translated to PHP at runtime.
-- **Embraces** a container-based scheduling wizardry with Ofelia, waving goodbye to the mundane Linux crontab/cron jobs.
+- **Embraces** a container-based scheduling wizardry with [Ofelia](https://github.com/mcuadros/ofelia), waving goodbye to the mundane Linux cron jobs.
 - **Bids farewell** to supervisord, reveling in a streamlined setup free from its clutches.
 - **Says no** to log file clutter and rotation headaches – witness everything elegantly flowing to stdout.
 - **Rides** the Traefik wave for a hassle-free ACME certificate ballet, courtesy of a savvy reverse-proxy.
