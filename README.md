@@ -59,11 +59,11 @@ Ensure that environment variables are configured appropriately, taking into acco
 For further details on these configurations and their impact on Observium's behavior, consult the Observium documentation
 or the comments provided in the `observium/.env`  file. Adjust the settings according to your deployment needs.
 
-## Traefik reverse-proxy
+## Traefik reverse-proxy example
 
 Here's how to run Traefik in front of Observium and probably every Docker web app you want to securely expose on the Interwebs.
 
-This service config features:
+The service configuration below features:
 - Redirects insecure requests to HTTPS
 - Runs the Traefik dashboard on its own FQDN, protected by basic authentication (use credentials traefik/traefik)
 - Utilizes ACME TLS challenge to automatically fetch certificates for your domains
