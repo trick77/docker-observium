@@ -31,7 +31,7 @@ services:
       ofelia.job-exec.discover-new.no-overlap: "true"
       ofelia.job-exec.discover-new.user: "www-data"
       ofelia.job-exec.discover-new.command: "/bin/bash -c \"/opt/observium/observium-wrapper discovery --host new\""
-      ofelia.job-exec.poll.schedule: "0 */5 * * * *"
+      ofelia.job-exec.poll.schedule: "@every 5m"
       ofelia.job-exec.poll.no-overlap: "true"
       ofelia.job-exec.poll.user: "www-data"
       ofelia.job-exec.poll.command: "/bin/bash -c \"/opt/observium/observium-wrapper poller\""
