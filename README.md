@@ -26,6 +26,40 @@ This repository provides a Dockerized version of Observium, a network monitoring
 1. Start the containers with `docker compose up -d`
 1. Watch for errors with `docker compose logs -f`
 
+## Configuration
+
+To configure Observium's PHP settings using Docker Compose, adhere to the guidelines below.
+Only environment variables in the `observium/.env` file with the `OBSERVIUM__` prefix will be utilized to generate the PHP configuration in the `config.php` file.
+
+### Mapping environment variables to Observium's configuration
+
+Add or overwrite Observium settings in the `observium/.env` file using the `OBSERVIUM__` prefix. Follow these mapping instructions:
+
+- Using a single underscore (`_`) will include an underscore in the key (e.g., `OBSERVIUM__int_core=0`).
+- Using a double underscore (`__`) will generate an associative array with the given key.
+- Dashes cannot be used in environment variables. To represent a dash in the key, escape it using triple underscores (`___`).
+
+Refer to the example below:
+
+```env
+OBSERVIUM__base_url=https://${OBSERVIUM_FQDN}
+OBSERVIUM__ping__retries=5
+OBSERVIUM__poller___wrapper__threads=2
+OBSERVIUM__unix___agent__port=6556
+OBSERVIUM__snmp__max___rep=true
+OBSERVIUM__web_mouseover=false
+OBSERVIUM__bad_if__0=docker0
+OBSERVIUM__bad_if__1=lo
+OBSERVIUM__bad_if_regexp__0='/^veth.*/'
+OBSERVIUM__bad_if_regexp__1='/^br-.*/'
+```
+
+- If there is a number at the end of the key, it will be used to construct an indexed/sequential array.
+- Ensure that environment variables are configured appropriately, taking into account the specific syntax requirements outlined above.
+
+For further details on these configurations and their impact on Observium's behavior, consult the Observium documentation
+or the comments provided in the `observium/.env`  file. Adjust the settings according to your deployment needs.
+
 ## Traefik reverse-proxy
 
 Here's how to run Traefik in front of Observium and probably every Docker web app you want to securely expose on the Interwebs.
