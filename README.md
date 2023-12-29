@@ -72,7 +72,6 @@ The service configuration below features:
 
 The required Docker bridge is defined externally and has to created with `docker network create traefik`. It's also possible to add IPv6 network support this way (not shown).
 
-**`compose.yml`**
 ``` yml
 version: '3'
 
