@@ -50,8 +50,8 @@ OBSERVIUM__snmp__max___rep=true
 OBSERVIUM__web_mouseover=false
 OBSERVIUM__bad_if__0=docker0
 OBSERVIUM__bad_if__1=lo
-OBSERVIUM__bad_if_regexp__0='/^veth.*'
-OBSERVIUM__bad_if_regexp__1='/^br-.*'
+OBSERVIUM__bad_if_regexp__0='/^veth.*/'
+OBSERVIUM__bad_if_regexp__1='/^br-.*/'
 ```
 
 Ensure that environment variables are configured appropriately, taking into account the specific syntax requirements outlined above.
