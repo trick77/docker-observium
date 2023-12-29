@@ -2,7 +2,7 @@
 
 [![Docker build](https://github.com/trick77/docker-observium/actions/workflows/build-images.yml/badge.svg)](https://github.com/trick77/docker-observium/actions/workflows/build-images.yml)
 
-This repo delivers [Observium](https://www.observium.org/), a network monitoring powerhouse, in a sleek Dockerized package. Spin up Observium in a flash within a containerized realm for seamless operation.
+This repository delivers [Observium](https://www.observium.org/), a network monitoring powerhouse, in a sleek Dockerized package. Spin up Observium in a flash within a containerized realm for seamless operation.
 
 ![Observium screenshot](/screenshot.png?raw=true)
 
@@ -19,10 +19,10 @@ This repo delivers [Observium](https://www.observium.org/), a network monitoring
 ## Disclaimer
 
 Just a heads up, this project is fine-tuned to dance with my specific monitoring groove and hardware vibes. It skips a beat on
-things like RANCID, CollectD, rrdcached, and ARM64 love.
-
-Dig the code? Awesome! If you're feeling the need for extra spice or tweaks, fork this repo and jam out your version.
+things like RANCID, CollectD, rrdcached, and ARM64 love. If you're feeling the need for extra spice or tweaks, fork this repo and jam out your version.
 No issues tab here – keeping it streamlined. Open to bugfix pull requests – hit me up if you spot anything wonky.
+
+I am not keen on providing pre-built docker images. Hence this is a build-your-own-image project.
 
 ## Prerequisites
 
