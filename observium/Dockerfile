@@ -30,7 +30,6 @@ RUN a2enmod rewrite php${PHP_VERSION} && \
     ln -sf /dev/stderr /var/log/apache2/error.log
 
 COPY bin/generate-config.php ./entrypoint.sh /usr/local/bin/
-
 VOLUME /opt/observium/rrd
 EXPOSE 8080
 
