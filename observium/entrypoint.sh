@@ -51,7 +51,7 @@ create_config() {
     export OBSERVIUM__db_name="${DB_NAME}"
     export OBSERVIUM__db_user="${DB_USER}"
     export OBSERVIUM__db_pass="${DB_PASSWORD}"
-    echo "$(php ./generate-config.php)" > ./config.php
+    echo "$(php /usr/local/bin/generate-config.php)" > ./config.php
     if [ "$SHOW_GENERATED_CONFIG_DURING_STARTUP" = "yes" ]; then
       echo "* Created Observium's config.php with the following settings:"
       cat ./config.php
@@ -71,7 +71,7 @@ import_devices() {
 }
 
 generate_smokeping_config() {
-    php /opt/observium/scripts/generate-smokeping.php > /etc/smokeping/config.d/Targets
+    php ./generate-smokeping.php > /etc/smokeping/config.d/Targets
 }
 
 check_db_connect
