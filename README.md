@@ -1,5 +1,7 @@
 # docker-observium
 
+[![Docker build](https://github.com/trick77/docker-observium/actions/workflows/build-images.yml/badge.svg)](https://github.com/trick77/docker-observium/actions/workflows/build-images.yml)
+
 This repository provides a Dockerized version of Observium, a network monitoring platform. It allows you to quickly set up and run Observium in a containerized environment.
 
 ## Features
