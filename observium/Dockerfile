@@ -19,7 +19,7 @@ WORKDIR /opt
 ADD ${OBSERVIUM_BINARY} ./
 
 WORKDIR /opt/observium
-RUN sed -i 's/icon-apple/icon-laptop/g' ./html/includes/functions.inc.php
+RUN sed -i 's/icon-apple/icon-laptop/g' /opt/observium/html/includes/functions.inc.php
 RUN ln -sf /dev/stdout ./logs/observium.log
 RUN chown -R www-data:www-data ./
 
