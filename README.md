@@ -37,8 +37,8 @@ Add or overwrite Observium settings in the `observium/.env` file using the `OBSE
 
 - Using a single underscore (`_`) will include an underscore in the key (e.g., `OBSERVIUM__int_core=0`).
 - Using a double underscore (`__`) will add the value to an associative array with the given key.
+- Using a double underscore with a number (`__0`) will add the value to an indexed/sequential array.
 - Dashes cannot be used in environment variables. To represent a dash in the key, escape it using triple underscores (`___`).
-- Using a number at the end of the key indicates that the value will be added to an indexed/sequential array.
 
 Refer to the example below:
 ```env
@@ -50,8 +50,8 @@ OBSERVIUM__snmp__max___rep=true
 OBSERVIUM__web_mouseover=false
 OBSERVIUM__bad_if__0=docker0
 OBSERVIUM__bad_if__1=lo
-OBSERVIUM__bad_if_regexp__0='/^veth.*/'
-OBSERVIUM__bad_if_regexp__1='/^br-.*/'
+OBSERVIUM__bad_if_regexp__0='/^veth.*'
+OBSERVIUM__bad_if_regexp__1='/^br-.*'
 ```
 
 Ensure that environment variables are configured appropriately, taking into account the specific syntax requirements outlined above.
