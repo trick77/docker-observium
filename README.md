@@ -46,12 +46,12 @@ Only environment variables in the `observium/.env` file with the `OBSERVIUM__` p
 
 Add or overwrite Observium settings in the `observium/.env` file using the `OBSERVIUM__` prefix. Follow these mapping instructions:
 
-| Expression                      | Description                                                                      |
-|---------------------------------|----------------------------------------------------------------------------------|
-| `_`                             | Using a single underscore (`_`) will include an underscore in the key.           |
-| `__`                            | Using a double underscore (`__`) will add the value to an associative array      |
-| `___`                           | To represent a dash in the key, escape it using triple underscores (`___`).      |
-| `__0`                           | Using a double underscore with a number (`__0`) will add the value to sequential array at the indicated index. |
+| Expression                      | Description                                                               |
+|---------------------------------|---------------------------------------------------------------------------|
+| `_`                             | Using a single underscore will include an underscore in the key.          |
+| `__`                            | Using a double underscore will add the value to an associative array      |
+| `___`                           | To represent a dash in the key, escape it using triple underscores.       |
+| `__0`                           | Using a double underscore with a number will add the value to sequential array at the indicated position. |
 
 Refer to the example below:
 ``` env
