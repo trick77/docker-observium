@@ -46,7 +46,7 @@ Only environment variables in the `observium/.env` file with the `OBSERVIUM__` p
 
 Add or overwrite Observium settings in the `observium/.env` file using the `OBSERVIUM__` prefix. Follow these mapping instructions:
 
-- Using a single underscore (`_`) will include an underscore in the key (e.g., `OBSERVIUM__int_core=0`).
+- Using a single underscore (`_`) will include an underscore in the key (e.g., `OBSERVIUM__enable_bgp=0`).
 - Using a double underscore (`__`) will add the value to an associative array with the given key.
 - Using a double underscore with a number (`__0`) will add the value to an indexed/sequential array.
 - Dashes cannot be used in environment variables. To represent a dash in the key, escape it using triple underscores (`___`).
