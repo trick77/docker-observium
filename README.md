@@ -2,7 +2,7 @@
 
 [![Docker build](https://github.com/trick77/docker-observium/actions/workflows/build-images.yml/badge.svg)](https://github.com/trick77/docker-observium/actions/workflows/build-images.yml)
 
-This repo delivers Observium, a network monitoring powerhouse, in a sleek Dockerized package. Spin up Observium in a flash within a containerized realm for seamless operation.
+This repo delivers [Observium](https://www.observium.org/), a network monitoring powerhouse, in a sleek Dockerized package. Spin up Observium in a flash within a containerized realm for seamless operation.
 
 ![Observium screenshot](/screenshot.png?raw=true)
 
