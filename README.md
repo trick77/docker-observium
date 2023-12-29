@@ -158,7 +158,7 @@ networks:
 
 - [ ] Show how to use the entrypoint to add/remove/rename devices
 - [x] Explain the `__` and `___` in .env
-- [ ] Alerts have to be added manually and that there is no import mechanism, at least not in CE. Maybe provide a template?
+- [x] Alerts have to be added manually and that there is no import mechanism, at least not in CE. Maybe provide a template?
 - [ ] Maybe provide a generate-env.sh to generate the basic settings?
 - [ ] Easy variable debugging using the Full Dump menu option in Observium's UI
 - [x] Explain why there is no issues tab for this project
