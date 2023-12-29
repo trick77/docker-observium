@@ -70,16 +70,17 @@ or the comments provided in the `observium/.env`  file. Adjust the settings acco
 
 ## Traefik reverse-proxy example
 
-Here's how to run Traefik in front of Observium and probably every Docker web app you want to securely expose on the Interwebs.
+Set up Traefik as your guardian for Observium and any Docker web app you desire to flaunt securely on the vast expanse of the Internet.
 
-The service configuration below features:
-- Redirects insecure requests to HTTPS
-- Runs the Traefik dashboard on its own FQDN, protected by basic authentication (use credentials traefik/traefik)
-- Utilizes ACME TLS challenge to automatically fetch certificates for your domains
-- Dumps access logs to the container's stdout
-- Reads environment variables from an `.env` file
+In this service configuration, behold:
 
-The required Docker bridge is defined externally and has to created with `docker network create traefik`. It's also possible to add IPv6 network support this way (not shown).
+- Forcefully nudging insecure requests towards the safer realms of HTTPS.
+- Elevate the Traefik dashboard to its majestic throne, guarded by the impenetrable shield of basic authentication (credentials: traefik/traefik).
+- Harness the power of the ACME TLS challenge to effortlessly summon certificates for your esteemed domains.
+- Witness the eloquent dance of access logs gracefully streaming into the container's stdout.
+- Equip your setup with the nimble ability to absorb environment variables from the sacred tome known as the `.env` file.
+
+The required Docker bridge is defined externally and has to created with `docker network create traefik`. It's also possible to add IPv6 network support this way (not shown here).
 
 ``` yml
 version: '3'
