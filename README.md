@@ -99,19 +99,16 @@ networks:
 
 ## Documentation TODO's
 
-Unfortunatley, no proper docs at this time...
-
-- Show how to use the entrypoint to add/remove/rename devices
-- Explain the `__` and `___` in .env
-- Alerts have to be added manually and that there is no import mechanism, at least not in CE. Maybe provide a template?
-- Maybe provide a generate-env.sh to generate the basic settings?
-- Easy variable debugging using the Full Dump menu option in Observium's UI
-- Explain why there is no issues tab for this project
-- Provide a Traefik example since those are somewhat hard to find
-- Show how to create the required traefik network using `docker network traefik create` or something
-- Why not LibreNMS?
-- Add a license
-- Restore instructions
-- Updating
-- Links to contributors/projects
+- [ ] Show how to use the entrypoint to add/remove/rename devices
+- [x] Explain the `__` and `___` in .env
+- [ ] Alerts have to be added manually and that there is no import mechanism, at least not in CE. Maybe provide a template?
+- [ ] Maybe provide a generate-env.sh to generate the basic settings?
+- [ ] Easy variable debugging using the Full Dump menu option in Observium's UI
+- [ ] Explain why there is no issues tab for this project
+- [x] Provide a Traefik example since those are somewhat hard to find
+- [x] Show how to create the required traefik network using `docker network traefik create` or something
+- [ ] Add a license
+- [ ] Restore instructions
+- [ ] Updating
+- [ ] Links to contributors/projects
 
