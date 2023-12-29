@@ -14,7 +14,7 @@ This repository delivers [Observium](https://www.observium.org/), a network moni
 - **Says no** to log file clutter and rotation headaches – witness everything elegantly flowing to stdout.
 - **Rides** the Traefik wave for a hassle-free ACME certificate ballet, courtesy of a savvy reverse-proxy.
 - **Safeguards** your data with daily backups, ensuring your digital fortress stands resilient.
-- **Feels the pulse** with Smokeping, adding rhythm to your network monitoring symphony.
+- **Feels the pulse** with [Smokeping](https://oss.oetiker.ch/smokeping), adding rhythm to your network monitoring symphony.
 
 ## Disclaimer
 
