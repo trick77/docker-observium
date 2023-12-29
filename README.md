@@ -2,19 +2,28 @@
 
 [![Docker build](https://github.com/trick77/docker-observium/actions/workflows/build-images.yml/badge.svg)](https://github.com/trick77/docker-observium/actions/workflows/build-images.yml)
 
-This repository provides a Dockerized version of Observium, a network monitoring platform. It allows you to quickly set up and run Observium in a containerized environment.
+This repo delivers Observium, a network monitoring powerhouse, in a sleek Dockerized package. Spin up Observium in a flash within a containerized realm for seamless operation.
 
 ## Features
 
-- Observium configuration settings can be defined using environment variables in the `observium/.env` file and get translated to PHP at runtime
-- Uses container-based scheduling mechanism using Ofelia instead of Linux crontab/cron jobs
-- Does not use supervisord
-- No log files, no log file rotation - everything is sent to stdout
-- Uses Traefik reverse-proxy for easy ACME certificate generation
-- Creates daily backups
-- Smokeping!
+- **Molds** Observium's behavior on-the-fly by defining config settings through environment variables in the `observium/.env` file, seamlessly translated to PHP at runtime.
+- **Embraces** a container-based scheduling wizardry with Ofelia, waving goodbye to the mundane Linux crontab/cron jobs.
+- **Bids farewell** to supervisord, reveling in a streamlined setup free from its clutches.
+- **Says no** to log file clutter and rotation headaches – witness everything elegantly flowing to stdout.
+- **Rides** the Traefik wave for a hassle-free ACME certificate ballet, courtesy of a savvy reverse-proxy.
+- **Safeguards** your data with daily backups, ensuring your digital fortress stands resilient.
+- **Feels the pulse** with Smokeping, adding rhythm to your network monitoring symphony.
+
+## Disclaimer
+
+Just a heads up, this project is fine-tuned to dance with my specific monitoring groove and hardware vibes. It skips a beat on
+things like RANCID, CollectD, rrdcached, and ARM64 love.
+
+Dig the code? Awesome! If you're feeling the need for extra spice or tweaks, fork this repo and jam out your version.
+No issues tab here – keeping it streamlined. Open to bugfix pull requests – hit me up if you spot anything wonky.
 
 ## Prerequisites
+
 1. Docker
 1. Traefik reverse-proxy (example configruation provided below)
 1. Devices you want to monitor using SNMP and maybe even Observium's Unix agent
@@ -129,18 +138,20 @@ networks:
 
 ```
 
-## Documentation TODO's
+## TODO
 
 - [ ] Show how to use the entrypoint to add/remove/rename devices
 - [x] Explain the `__` and `___` in .env
 - [ ] Alerts have to be added manually and that there is no import mechanism, at least not in CE. Maybe provide a template?
 - [ ] Maybe provide a generate-env.sh to generate the basic settings?
 - [ ] Easy variable debugging using the Full Dump menu option in Observium's UI
-- [ ] Explain why there is no issues tab for this project
+- [x] Explain why there is no issues tab for this project
 - [x] Provide a Traefik example since those are somewhat hard to find
 - [x] Show how to create the required traefik network using `docker network traefik create` or something
 - [ ] Add a license
 - [ ] Restore instructions
 - [ ] Updating
+- [ ] SNMP client config including distro script
+- [ ] Unix agent client config with xinetd
 - [ ] Links to contributors/projects
 
