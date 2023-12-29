@@ -57,12 +57,23 @@ OBSERVIUM__base_url=https://${OBSERVIUM_FQDN}
 OBSERVIUM__ping__retries=5
 OBSERVIUM__poller___wrapper__threads=2
 OBSERVIUM__unix___agent__port=6556
-OBSERVIUM__snmp__max___rep=true
 OBSERVIUM__web_mouseover=false
 OBSERVIUM__bad_if__0=docker0
 OBSERVIUM__bad_if__1=lo
 OBSERVIUM__bad_if_regexp__0='/^veth.*/'
 OBSERVIUM__bad_if_regexp__1='/^br-.*/'
+```
+Should be translated during container startup to the equivalent of:
+``` php
+$config['base_url'] = "https://observium.abba.net/";
+$config['ping_retries'] = 5;
+$config['poller-wrapper]['threads'] = 2;
+$config['unix-agent']['port'] = 6556;
+$config['web_mouseover'] = FALSE;
+$config['bad_if'][] = "docker0";
+$config['bad_if'][] = "lo";
+$config['bad_if_regexp'][] = "/^veth.*/";
+$config['bad_if_regexp'][] = "/^br-.*/";
 ```
 
 Ensure that environment variables are configured appropriately, taking into account the specific syntax requirements outlined above.
