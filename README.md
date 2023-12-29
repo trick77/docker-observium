@@ -32,7 +32,7 @@ No issues tab here – keeping it streamlined. Open to bugfix pull requests – 
 
 1. Edit `observium/.env` to set passwords and other configuration details
 1. Edit `observium/conf/observium/devices.txt` to add SNMP devices that should be imported during container startup
-1. Start the containers with `docker compose up -d`
+1. Start the containers with a single `docker compose up -d` in the base directory
 1. Monitor for errors with `docker compose logs -f`
 
 ## Configuration
