@@ -59,7 +59,7 @@ create_config() {
 }
 
 import_devices() {
-    devices_file="/tmp/devices.txt"
+    devices_file="/conf/devices.txt"
     if [ -e "${devices_file}" ]; then
         echo "* Trying to import devices from devices-import file ${devices_file}..."
         while read -r params || [ -n "$params" ]; do
@@ -67,16 +67,6 @@ import_devices() {
         done < <(grep -v "^#\|^$" "${devices_file}")
     else
     echo "* Devices-import file ${devices_file} does not exist, not importing any devices"
-    fi
-}
-
-import_alerts() {
-    alerts_file="/conf/alerts.xml"
-    if [ -e "${alerts_file}" ]; then
-        echo "* Trying to import alerts from alerts-import file ${alerts_file}..."
-        php ./add_device.php ${params} || true
-    else
-    echo "* Alerts-import file ${alerts_file} does not exist, not importing any alerts"
     fi
 }
 

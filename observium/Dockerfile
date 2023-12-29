@@ -19,8 +19,10 @@ WORKDIR /opt
 ADD ${OBSERVIUM_BINARY} ./
 
 WORKDIR /opt/observium
+RUN sed -i 's/icon-apple/icon-laptop/g' ./html/includes/functions.inc.php
 RUN ln -sf /dev/stdout ./logs/observium.log
 RUN chown -R www-data:www-data ./
+
 
 # Configure Apache2 webserver
 COPY conf/apache2/site.conf /etc/apache2/sites-enabled/000-default.conf

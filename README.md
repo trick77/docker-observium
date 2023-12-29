@@ -20,7 +20,7 @@ This repository provides a Dockerized version of Observium, a network monitoring
 ## Usage
 
 1. Edit `observium/.env` and set passwords and stuff
-1. Edit `observium/devices.txt` to add one or more devices during container startup
+1. Edit `observium/conf/observium/devices.txt` to add one or more devices during container startup
 1. Start the containers with `docker compose up -d`
 1. Watch for errors with `docker compose logs -f`
 

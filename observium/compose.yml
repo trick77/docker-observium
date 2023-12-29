@@ -44,7 +44,6 @@ services:
       ofelia.job-exec.cleanup-rrds.user: "www-data"
       ofelia.job-exec.cleanup-rrds.command: "/bin/bash -c \"/opt/observium/housekeeping.php -yrptb\""
       ofelia.job-exec.smokeping-config.schedule: "@every 5m"
-      ofelia.job-exec.smokeping-config.user: "root"
       ofelia.job-exec.smokeping-config.command: "/bin/bash -c \"php /opt/observium/scripts/generate-smokeping.php > /etc/smokeping/config.d/Targets\""
       traefik.enable: true
       traefik.http.routers.observium.rule: "Host(`${OBSERVIUM_FQDN}`)"
@@ -113,19 +112,15 @@ services:
       ofelia.enabled: "true"
       ofelia.job-exec.backup-rrd.schedule: "@every 24h"
       ofelia.job-exec.backup-rrd.no-overlap: "true"
-      ofelia.job-exec.backup-rrd.user: "root"
       ofelia.job-exec.backup-rrd.command: "/bin/sh -c \"tar -czf /backup/destination/rrd_$(date '+%Y%m%d%H%M%S').tar.gz -C /backup observium-data smokeping-data && ls -t /backup/destination/*.tar.gz"
       ofelia.job-exec.backup-rrd-cleanup.schedule: "@every 24h"
       ofelia.job-exec.backup-rrd-cleanup.no-overlap: "true"
-      ofelia.job-exec.backup-rrd-cleanup.user: "root"
       ofelia.job-exec.backup-rrd-cleanup.command: "/bin/sh -c \"ls -t /backup/destination/rrd_*.gz | tail -n +10 | xargs rm -f\""
       ofelia.job-exec.backup-db.schedule: "@every 24h"
       ofelia.job-exec.backup-db.no-overlap: "true"
-      ofelia.job-exec.backup-db.user: "root"
       ofelia.job-exec.backup-db.command: "/bin/sh -c \"mariadb-dump --user ${DB_USER} -p${DB_PASSWORD} --host db ${DB_NAME} | gzip > /backup/destination/db_$(date '+%Y%m%d%H%M%S').sql.gz\""
       ofelia.job-exec.backup-db-cleanup.schedule: "@every 24h"
       ofelia.job-exec.backup-db-cleanup.no-overlap: "true"
-      ofelia.job-exec.backup-db-cleanup.user: "root"
       ofelia.job-exec.backup-db-cleanup.command: "/bin/sh -c \"ls -t /backup/destination/db_*.gz | tail -n +10 | xargs rm -f\""
     networks:
       - observium
