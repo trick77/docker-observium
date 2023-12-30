@@ -18,11 +18,9 @@ This repository delivers [Observium](https://www.observium.org/), a network moni
 
 ## Disclaimer
 
-Just a heads up, this project is fine-tuned to dance with my specific monitoring groove and hardware vibes. It skips a beat on
-things like RANCID, CollectD, rrdcached, and ARM64 love. If you're feeling the need for extra spice or tweaks, fork this repo and jam out your version.
-No issues tab here – keeping it streamlined. Open to bugfix pull requests – hit me up if you spot anything wonky.
-
-I am not keen on providing pre-built docker images. Hence this is a build-your-own-image project.
+Just a heads up, this project is fine-tuned to dance with my specific monitoring needs. It skips a beat on
+things like RANCID, CollectD, rrdcached, and ARM64 love. While I'm currently not open to extending the functionality through
+contributions, I welcome bugfix pull requests. Hit me up if you spot anything wonky.
 
 ## Prerequisites
 
@@ -33,7 +31,7 @@ I am not keen on providing pre-built docker images. Hence this is a build-your-o
 ## Usage
 
 1. Edit `observium/.env` to set passwords and other configuration details
-1. Edit `observium/conf/observium/devices.txt` to add SNMP devices that should be imported during container startup
+1. Edit `observium/conf/observium/snmp-devices.txt` to add SNMP devices that should be imported during container startup
 1. Start the containers with a single `docker compose up -d` in the base directory
 1. Monitor for errors with `docker compose logs -f`
 
@@ -78,7 +76,9 @@ $config['bad_if_regexp'][] = "/^veth.*/";
 $config['bad_if_regexp'][] = "/^br-.*/";
 ```
 
-Ensure that environment variables are configured appropriately, taking into account the specific syntax requirements outlined above.
+Ensure that environment variables are configured appropriately, taking into account the specific syntax requirements outlined above. For a debugging
+tip, once the UI is up, check the "Full dump" and "Changed dump" in "Global Settings" to view how the environment variables were mapped to
+Observium's configuration.
 
 For further details on these configurations and their impact on Observium's behavior, consult the Observium documentation
 or the comments provided in the `observium/.env`  file. Adjust the settings according to your deployment needs.
@@ -160,7 +160,7 @@ networks:
 - [x] Explain the `__` and `___` in .env
 - [x] Alerts have to be added manually and that there is no import mechanism, at least not in CE. Maybe provide a template?
 - [ ] Maybe provide a generate-env.sh to generate the basic settings?
-- [ ] Easy variable debugging using the Full Dump menu option in Observium's UI
+- [x] Easy variable debugging using the Full Dump menu option in Observium's UI
 - [x] Explain why there is no issues tab for this project
 - [x] Provide a Traefik example since those are somewhat hard to find
 - [x] Show how to create the required traefik network using `docker network traefik create` or something
