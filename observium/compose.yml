@@ -118,7 +118,7 @@ services:
       ofelia.job-exec.backup-rrd-cleanup.command: "/bin/sh -c \"ls -t /backup/destination/rrd_*.gz | tail -n +10 | xargs rm -f\""
       ofelia.job-exec.backup-db.schedule: "@every 24h"
       ofelia.job-exec.backup-db.no-overlap: "true"
-      ofelia.job-exec.backup-db.command: "/bin/sh -c \"mariadb-dump --user ${DB_USER} -p${DB_PASSWORD} --host db ${DB_NAME} | gzip > /backup/destination/db_$(date '+%Y%m%d%H%M%S').sql.gz\""
+      ofelia.job-exec.backup-db.command: "/bin/sh -c \"mariadb-dump --user ${DB_USER} -p${DB_PASSWORD} -h db -t ${DB_NAME} | gzip > /backup/destination/db_$(date '+%Y%m%d%H%M%S').sql.gz\""
       ofelia.job-exec.backup-db-cleanup.schedule: "@every 24h"
       ofelia.job-exec.backup-db-cleanup.no-overlap: "true"
       ofelia.job-exec.backup-db-cleanup.command: "/bin/sh -c \"ls -t /backup/destination/db_*.gz | tail -n +10 | xargs rm -f\""
