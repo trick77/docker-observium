@@ -85,74 +85,7 @@ or the comments provided in the `observium/.env`  file. Adjust the settings acco
 
 ## Traefik reverse-proxy example
 
-Set up Traefik as your guardian for Observium and any Docker web app you desire to flaunt securely on the vast expanse of the Internet.
-
-In this service configuration, behold:
-
-- Forcefully nudging insecure requests towards the safer realms of HTTPS.
-- Elevate the Traefik dashboard to its majestic throne, guarded by the impenetrable shield of basic authentication (credentials: traefik/traefik).
-- Harness the power of the ACME TLS challenge to effortlessly summon certificates for your esteemed domains.
-- Witness the eloquent dance of access logs gracefully streaming into the container's stdout.
-- Equip your setup with the nimble ability to absorb environment variables from the sacred tome known as the `.env` file.
-
-The required Docker bridge is defined externally and has to created with `docker network create traefik`. It's also possible to add IPv6 network support this way (not shown here).
-
-``` yml
-version: '3.9'
-
-services:
-  traefik:
-    image: traefik:v3.0
-    container_name: traefik
-    restart: always
-    environment:
-      - PUID=65534
-      - PGID=65534
-      - TZ=${TIMEZONE}
-      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
-    command:
-      - "--log.level=INFO"
-      - "--api.dashboard=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.network=traefik"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.websecure.asDefault=true"
-      - "--entrypoints.websecure.http.tls.certresolver=letsencrypt"
-      - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
-      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      - "--accesslog=true"
-      - "--accessLog.fields.headers.names.User-Agent=keep"
-      - "--ping"
-      - "--global.checkNewVersion=true"
-      - "--global.sendAnonymousUsage=false"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.mydashboard.rule=Host(`${TRAEFIK_DASHBOARD_FQDN}`)"
-      - "traefik.http.routers.mydashboard.service=api@internal"
-      - "traefik.http.routers.mydashboard.middlewares=myauth"
-      - "traefik.http.middlewares.myauth.basicauth.users=traefik:$$2y$$05$$uuzfkHu9qpLnslD9reMTEu7KsTKaM5Gzy2jD77/5ciGO7mcVXxHB2"
-    healthcheck:
-      test: "traefik healthcheck --ping"
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./letsencrypt:/letsencrypt
-    networks:
-      - traefik
-
-networks:
-  traefik:
-    external: true
-
-```
+Example was moved to it's own repository: [quick-traefik](https://github.com/trick77/quick-traefik)
 
 ## TODO
 
