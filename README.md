@@ -12,7 +12,7 @@ This repository delivers [Observium](https://www.observium.org/), a network moni
 - **Embraces** a container-based scheduling wizardry with [Ofelia](https://github.com/mcuadros/ofelia), waving goodbye to the mundane Linux cron jobs.
 - **Bids farewell** to supervisord, reveling in a streamlined setup free from its clutches.
 - **Says no** to log file clutter and rotation headaches – witness everything elegantly flowing to stdout.
-- **Rides** the Traefik wave for a hassle-free ACME certificate ballet, courtesy of a savvy reverse-proxy.
+- **Rides** the Traefik wave for a hassle-free Let's Encrypt certificate ballet, courtesy of a savvy reverse-proxy.
 - **Safeguards** your data with daily backups, ensuring your digital fortress stands resilient.
 - **Feels the pulse** with [Smokeping](https://oss.oetiker.ch/smokeping), adding rhythm to your network monitoring symphony.
 
