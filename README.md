@@ -12,7 +12,7 @@ This repository delivers [Observium](https://www.observium.org/), a network moni
 - **Embraces** container-based scheduling wizardry with [Ofelia](https://github.com/mcuadros/ofelia), waving goodbye to the mundane Linux cron jobs.
 - **Bids farewell** to supervisord, reveling in a streamlined setup free from its clutches.
 - **Says no** to log file clutter and rotation headaches – witness everything elegantly flowing to stdout.
-- **Rides** the Traefik wave for a hassle-free Let's Encrypt certificate ballet, courtesy of a savvy reverse-proxy.
+- **Rides** the [Traefik](https://github.com/traefik/traefik) wave for a hassle-free Let's Encrypt certificate ballet, courtesy of a savvy reverse-proxy.
 - **Safeguards** your data with daily backups, ensuring your digital fortress stands resilient.
 - **Feels the pulse** with [Smokeping](https://oss.oetiker.ch/smokeping), adding rhythm to your network monitoring symphony.
 
@@ -25,7 +25,7 @@ contributions, I welcome bugfix pull requests. Hit me up if you spot anything wo
 ## Prerequisites
 
 1. Docker
-1. Traefik reverse-proxy (example configruation provided below)
+1. Traefik reverse proxy (see example configuration provided below)
 1. Devices you want to monitor using SNMP and maybe even Observium's Unix agent
 
 ## Usage
