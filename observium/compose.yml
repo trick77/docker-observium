@@ -21,6 +21,7 @@ services:
       - rrd-data:/opt/observium/rrd/
       - smokeping-data:/var/lib/smokeping/:ro,Z
       - smokeping-config:/etc/smokeping/config.d/
+      - ../backup:/backup/destination
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.discover-all.schedule: "@every 6h"
@@ -36,15 +37,17 @@ services:
       ofelia.job-exec.poll.user: "www-data"
       ofelia.job-exec.poll.command: "/bin/bash -c \"/opt/observium/observium-wrapper poller\""
       ofelia.job-exec.cleanup-logs.schedule: "0 13 5 * * *"
-      ofelia.job-exec.cleanup-logs.no-overlap: "true"
       ofelia.job-exec.cleanup-logs.user: "www-data"
       ofelia.job-exec.cleanup-logs.command: "/bin/bash -c \"/opt/observium/housekeeping.php -ysel\""
       ofelia.job-exec.cleanup-rrds.schedule: "0 47 4 * * *"
-      ofelia.job-exec.cleanup-rrds.no-overlap: "true"
       ofelia.job-exec.cleanup-rrds.user: "www-data"
       ofelia.job-exec.cleanup-rrds.command: "/bin/bash -c \"/opt/observium/housekeeping.php -yrptb\""
       ofelia.job-exec.smokeping-config.schedule: "@every 5m"
       ofelia.job-exec.smokeping-config.command: "/bin/bash -c \"php /opt/observium/scripts/generate-smokeping.php > /etc/smokeping/config.d/Targets\""
+      ofelia.job-exec.backup-rrd.schedule: "@daily"
+      ofelia.job-exec.backup-rrd.command: "/bin/sh -c \"tar -czf /backup/destination/rrd_$(date '+%Y%m%d%H%M%S').tar.gz -C /backup/destination /opt/observium/rrd /var/lib/smokeping\""
+      ofelia.job-exec.trim-backup-rrd.schedule: "@daily"
+      ofelia.job-exec.trim-backup-rrd.command: "/bin/sh -c \"ls -t /backup/destination/rrd_*.gz | tail -n +10 | xargs rm -f\""
       traefik.enable: true
       traefik.http.routers.observium.rule: "Host(`${OBSERVIUM_FQDN}`)"
       traefik.http.routers.observium.entrypoints: "websecure"
@@ -78,6 +81,13 @@ services:
       - mariadb-data:/var/lib/mysql/
       - /run/mysqld:/var/run/mysqld/
       - ./conf/mariadb/:/etc/mysql/conf.d/:ro,Z
+      - ../backup:/backup/destination
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.backup-db.schedule: "@daily"
+      ofelia.job-exec.backup-db.command: "/bin/sh -c \"mariadb-dump --user ${DB_USER} -p${DB_PASSWORD} -h db -t ${DB_NAME} | gzip > /backup/destination/db_$(date '+%Y%m%d%H%M%S').sql.gz\""
+      ofelia.job-exec.trim-backup-db.schedule: "@daily"
+      ofelia.job-exec.trim-backup-db.command: "/bin/sh -c \"ls -t /backup/destination/db_*.gz | tail -n +10 | xargs rm -f\""
     networks:
       - observium
 
@@ -91,37 +101,12 @@ services:
     depends_on:
       - httpd
       - mariadb
-    labels:
-      ofelia.enabled: "true"
     security_opt:
       - label=disable
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-
-  backup:
-    image: mariadb:11
-    container_name: backup
-    restart: unless-stopped
-    command: tail -f /dev/null
-    env_file: ./.env
-    volumes:
-      - rrd-data:/backup/observium-data
-      - smokeping-data:/backup/smokeping-data
-      - ../backup:/backup/destination
     labels:
       ofelia.enabled: "true"
-      ofelia.job-exec.backup-rrd.schedule: "@daily"
-      ofelia.job-exec.backup-rrd.no-overlap: "true"
-      ofelia.job-exec.backup-rrd.command: "/bin/sh -c \"tar -czf /backup/destination/rrd_$(date '+%Y%m%d%H%M%S').tar.gz -C /backup observium-data smokeping-data && ls -t /backup/destination/*.tar.gz"
-      ofelia.job-exec.backup-rrd-cleanup.schedule: "@daily"
-      ofelia.job-exec.backup-rrd-cleanup.no-overlap: "true"
-      ofelia.job-exec.backup-rrd-cleanup.command: "/bin/sh -c \"ls -t /backup/destination/rrd_*.gz | tail -n +10 | xargs rm -f\""
-      ofelia.job-exec.backup-db.schedule: "@daily"
-      ofelia.job-exec.backup-db.no-overlap: "true"
-      ofelia.job-exec.backup-db.command: "/bin/sh -c \"mariadb-dump --user ${DB_USER} -p${DB_PASSWORD} -h db -t ${DB_NAME} | gzip > /backup/destination/db_$(date '+%Y%m%d%H%M%S').sql.gz\""
-      ofelia.job-exec.backup-db-cleanup.schedule: "@daily"
-      ofelia.job-exec.backup-db-cleanup.no-overlap: "true"
-      ofelia.job-exec.backup-db-cleanup.command: "/bin/sh -c \"ls -t /backup/destination/db_*.gz | tail -n +10 | xargs rm -f\""
     networks:
       - observium
 
