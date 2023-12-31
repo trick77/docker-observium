@@ -85,7 +85,7 @@ or the comments provided in the `observium/.env`  file. Adjust the settings acco
 
 ## Traefik reverse-proxy example
 
-Example was moved to it's own repository: [quick-traefik](https://github.com/trick77/quick-traefik)
+Example was moved to its own repository: [quick-traefik](https://github.com/trick77/quick-traefik)
 
 ## TODO
 
