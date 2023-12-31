@@ -64,9 +64,7 @@ import_snmp_devices() {
   devices_file="/conf/snmp-devices.txt"
   if [ -e "${devices_file}" ]; then
     echo "Trying to import SNMP devices from ${devices_file}..."
-    while read -r params || [ -n "$params" ]; do
-      php ./add_device.php ${params} || true
-    done < <(grep -v "^#\|^$" "${devices_file}")
+    php ./add_device.php "${devices_file}" || true
     echo "Done importing SNMP devices!"
   else
     echo "Not importing any SNMP devices, file ${devices_file} does not exist!"
