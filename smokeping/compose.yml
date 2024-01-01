@@ -11,3 +11,6 @@ services:
     volumes:
       - smokeping-data:/var/lib/smokeping/
       - smokeping-config:/etc/smokeping/config.d/
+    networks:
+      - observium
+
