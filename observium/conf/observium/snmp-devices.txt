@@ -6,4 +6,4 @@
 # <hostname> [any|nanp|anp|ap] [v3] [user] [password] [enckey] [md5|sha|sha-224|sha-256|sha-384|sha-512] [des|aes|aes-192|aes-192-c|aes-256|aes-256-c] [port] [udp|udp6|tcp|tcp6]
 #
 # Example:
-# mydevice.somewhere.com.net anp v3 snmpadmin secret md5 udp6
+# mydevice.somewhere.com.net anp v3 snmpadmin secret md5 udp
