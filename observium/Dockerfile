@@ -18,7 +18,12 @@ WORKDIR /opt
 ADD ${OBSERVIUM_BINARY} ./
 
 WORKDIR /opt/observium
+
+# Don't like the Apple icon ;-)
 RUN sed -i 's/icon-apple/icon-laptop/g' /opt/observium/html/includes/functions.inc.php || true
+# Patching a bug when using file import
+RUN sed -i 's/\($snmp_v3_args\s*=\s*array_slice(\$argv, 4);\)/$snmp_v3_args = array_slice($add, 3);/' ./add_device.php || true
+
 RUN ln -sf /dev/stdout ./logs/observium.log
 RUN chown -R www-data:www-data ./
 
