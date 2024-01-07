@@ -1,6 +1,6 @@
 # agent-local
 
-This repository contains a set of Unix agent scripts designed for monitoring Linux Debian servers with Observium.
+This directory contains a set of Unix agent scripts designed for monitoring Linux Debian servers with Observium.
 The typical location for these scripts on the server to be monitored is `/usr/lib/observium_agent/local`.
 Please note that installing the scripts alone isn't sufficient. Refer to [Observium's documentation](https://docs.observium.org/unix_agent/) for
 guidance on how to use them.
