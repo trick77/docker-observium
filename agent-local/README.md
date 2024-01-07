@@ -5,11 +5,6 @@ The typical location for these scripts on the server to be monitored is `/usr/li
 Please note that installing the scripts alone isn't sufficient. Refer to [Observium's documentation](https://docs.observium.org/unix_agent/) for
 guidance on how to use them.
 
-## Script installation
-
-Use the provided `install.sh` to directly install from this repository without cloning it:
-`bash ...`
-
 ## dpgk
 
 This local agent script supplies package information to Observium. This information is cached for up to 30 minutes
