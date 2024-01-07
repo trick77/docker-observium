@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if ! command -v ioping &> /dev/null; then
+  echo "Error: ioping is not installed. Please install it before running this script."
+  exit 1
+fi
+
+parallel=0
+if [ -r "${0}.conf" ]; then
+  first_line=$(head -n 1 "${0}.conf")
+  if [ "${first_line}" = "parallel=yes" ]; then
+    parallel=1
+  elif [ "${first_line}" != "parallel=no" ]; then
+    echo "Error: first line in ${0}.conf should be 'parallel=no' or 'parallel=yes'"
+    exit 1
+  fi
+else
+  echo "Configuration file ${0}.conf not found or not readable"
+  exit 1
+fi
+
+echo '<<<app-ioping>>>'
+
+while IFS= read -r dev; do
+  if [ "$parallel" -eq 0 ]; then
+    echo "$dev $(ioping -q -s 16k -D -c 4 -P 3 $dev)"
+  else
+    echo "$dev $(ioping -q -s 16k -D -c 4 -P 3 $dev)" &
+  fi
+done < <(tail -n +2 "${0}.conf")
+
+if [ "$parallel" -eq 1 ]; then
+  wait
+fi

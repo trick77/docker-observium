@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if ! command -v smartctl &> /dev/null || ! command -v jq &> /dev/null; then
+  echo "Error: smartctl or jq is not installed. Please install them before running this script."
+  exit 1
+fi
+
+drives=()
+
+for drive in /dev/sd[a-z]; do
+  drives+=("$drive")
+done
+
+echo '<<<hddtemp>>>'
+
+for drive in "${drives[@]}"; do
+  smartctl_output=$(smartctl -a "${drive}" -j)
+
+  model_name=$(echo "$smartctl_output" | jq -r '.model_name')
+  temperature=$(echo "$smartctl_output" | jq -r '.temperature.current')
+
+  if [ "$temperature" != "null" ]; then
+    echo -n "|${drive}"
+    echo -n "|$model_name"
+    echo -n "|$temperature"
+    echo -n "|C|"
+  fi
+done
+
+echo
