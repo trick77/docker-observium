@@ -7,7 +7,8 @@ guidance on how to use them.
 
 ## Script installation
 
-Use the provided `install.sh` to directly install from this repository without cloning it.
+Use the provided `install.sh` to directly install from this repository without cloning it:
+`bash ...`
 
 ## dpgk
 
