@@ -57,6 +57,7 @@ services:
 
   mariadb:
     image: mariadb:11
+    container_name: observium-db
     restart: unless-stopped
     stop_grace_period: 45s
     healthcheck:

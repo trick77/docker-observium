@@ -7,7 +7,7 @@ if [ "${DEBUG_MODE,,}" == "true" ]; then
   set -o xtrace
 fi
 
-db_hostname=db
+db_hostname=mariadb
 
 show_observium_info() {
   echo "****************************************************"
@@ -49,7 +49,7 @@ init_if_required() {
 }
 
 create_config() {
-  export OBSERVIUM__db_host='db'
+  export OBSERVIUM__db_host='mariadb'
   export OBSERVIUM__db_name="${DB_NAME}"
   export OBSERVIUM__db_user="${DB_USER}"
   export OBSERVIUM__db_pass="${DB_PASSWORD}"
