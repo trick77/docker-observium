@@ -75,8 +75,8 @@ services:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       MARIADB_INITDB_SKIP_TZINFO: 1
       MARIADB_MYSQL_LOCALHOST_USER: 1
-    ports:
-      - "${SQL_PORT:-127.0.0.1:13306}:3306"
+    expose:
+      - 3306
     volumes:
       - mariadb-data:/var/lib/mysql/
       - /run/mysqld:/var/run/mysqld/
