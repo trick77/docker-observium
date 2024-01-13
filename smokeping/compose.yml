@@ -4,7 +4,6 @@ services:
 
   smokeping:
     build: .
-    container_name: smokeping
     restart: unless-stopped
     depends_on:
       - httpd

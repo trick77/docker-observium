@@ -4,7 +4,6 @@ services:
 
   httpd:
     build: .
-    container_name: httpd
     restart: unless-stopped
     env_file: ./.env
     expose:
@@ -58,7 +57,6 @@ services:
 
   mariadb:
     image: mariadb:11
-    container_name: db
     restart: unless-stopped
     stop_grace_period: 45s
     healthcheck:
@@ -93,7 +91,6 @@ services:
 
   ofelia:
     image: mcuadros/ofelia:latest
-    container_name: scheduler
     restart: always
     command: daemon --docker
     environment:
