@@ -7,8 +7,8 @@ services:
     container_name: httpd
     restart: unless-stopped
     env_file: ./.env
-    ports:
-      - "127.0.0.1:8081:8080"
+    expose:
+      - 8080
     healthcheck:
       test: timeout 10s bash -c ':> /dev/tcp/127.0.0.1/8080' || exit 1
       interval: 10s
