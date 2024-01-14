@@ -22,6 +22,7 @@ services:
       - smokeping-config:/etc/smokeping/config.d/
       - ../backup:/backup/destination
     labels:
+      com.centurylinklabs.watchtower.enable: "false"
       ofelia.enabled: "true"
       ofelia.job-exec.discover-all.schedule: "@every 6h"
       ofelia.job-exec.discover-all.no-overlap: "true"
