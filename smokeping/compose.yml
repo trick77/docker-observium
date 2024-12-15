@@ -1,7 +1,4 @@
-version: '3.9'
-
 services:
-
   smokeping:
     build: .
     restart: unless-stopped

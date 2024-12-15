@@ -2,7 +2,7 @@ FROM debian:bookworm-slim
 
 ARG PHP_VERSION=8.2
 ARG PYTHON_VERSION=3
-ARG OBSERVIUM_BINARY=observium-community-23.9.13005.tar.gz
+ARG OBSERVIUM_BINARY=observium-community-24.4.tar.gz
 
 RUN apt update && \
     apt -y dist-upgrade && \
@@ -25,7 +25,7 @@ RUN sed -i 's/icon-apple/icon-laptop/g' /opt/observium/html/includes/functions.i
 RUN sed -i 's/\($snmp_v3_args\s*=\s*array_slice(\$argv, 4);\)/$snmp_v3_args = array_slice($add, 3);/' ./add_device.php || true
 
 RUN ln -sf /dev/stdout ./logs/observium.log
-RUN chown -R www-data:www-data ./
+RUN chown -R -v www-data:www-data ./
 
 COPY conf/apache2/site.conf /etc/apache2/sites-enabled/000-default.conf
 COPY conf/apache2/conf-enabled/*.conf /etc/apache2/conf-enabled
