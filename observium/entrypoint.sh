@@ -45,6 +45,7 @@ init_if_required() {
      ./adduser.php "${OBSERVIUM_ADMIN_USER}" "${OBSERVIUM_ADMIN_PASSWORD}" 10
   else
     echo "Database schema already initialized, no initialization required!"
+     ./discovery.php -u
   fi
 }
 
