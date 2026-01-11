@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -o pipefail
-set +e
+set -e
 
 if [ "${DEBUG_MODE,,}" == "true" ]; then
   set -o xtrace
@@ -18,6 +18,8 @@ for var in $required_vars; do
 done
 
 db_hostname=mariadb
+# Make database connection timeout configurable (default: 60 seconds)
+DB_CONNECTION_TIMEOUT=${DB_CONNECTION_TIMEOUT:-60}
 
 # Use MYSQL_PWD to avoid password in process list
 export MYSQL_PWD="${DB_PASSWORD}"
@@ -32,7 +34,7 @@ show_observium_info() {
 
 check_db_connection() {
   attempt=0
-  max_attempts=60
+  max_attempts=${DB_CONNECTION_TIMEOUT}
   rc=1
   while [ $rc -ne 0 ] && [ $attempt -lt $max_attempts ]
   do
@@ -72,7 +74,28 @@ create_config() {
   export OBSERVIUM__db_name="${DB_NAME}"
   export OBSERVIUM__db_user="${DB_USER}"
   export OBSERVIUM__db_pass="${DB_PASSWORD}"
-  python3 /usr/local/bin/generate_config.py > ./config.php
+
+  echo "Generating Observium configuration..."
+  attempt=0
+  max_attempts=3
+  success=0
+
+  while [ $attempt -lt $max_attempts ] && [ $success -eq 0 ]; do
+    let attempt++
+    if python3 /usr/local/bin/generate_config.py > ./config.php 2>/dev/null; then
+      success=1
+      echo "Configuration generated successfully!"
+    else
+      echo "WARNING: Config generation attempt ${attempt}/${max_attempts} failed"
+      [ $attempt -lt $max_attempts ] && sleep 1
+    fi
+  done
+
+  if [ $success -eq 0 ]; then
+    echo "ERROR: Failed to generate configuration after ${max_attempts} attempts"
+    exit 1
+  fi
+
   if [ "$SHOW_GENERATED_CONFIG_DURING_STARTUP" = "yes" ]; then
     echo "Created Observium's config.php with the following settings:"
     cat ./config.php
@@ -82,11 +105,14 @@ create_config() {
 import_snmp_devices() {
   devices_file="/conf/snmp-devices.txt"
   if [ -e "${devices_file}" ]; then
-    echo "Trying to import SNMP devices from ${devices_file}..."
-    php ./add_device.php "${devices_file}" || true
-    echo "Done importing SNMP devices!"
+    echo "Importing SNMP devices from ${devices_file}..."
+    if php ./add_device.php "${devices_file}" 2>&1; then
+      echo "Successfully imported SNMP devices!"
+    else
+      echo "WARNING: Some devices may have failed to import. Check the output above for details."
+    fi
   else
-    echo "Not importing any SNMP devices, file ${devices_file} does not exist!"
+    echo "Skipping SNMP device import - ${devices_file} does not exist"
   fi
 }
 
@@ -102,7 +128,17 @@ import_alert_checks_if_required() {
 }
 
 generate_smokeping_config() {
-  php ./scripts/generate-smokeping.php > /etc/smokeping/config.d/Targets
+  if [ ! -f ./scripts/generate-smokeping.php ]; then
+    echo "WARNING: Smokeping config generator script not found, skipping"
+    return 0
+  fi
+
+  echo "Generating Smokeping configuration..."
+  if php ./scripts/generate-smokeping.php > /etc/smokeping/config.d/Targets 2>&1; then
+    echo "Successfully generated Smokeping configuration"
+  else
+    echo "WARNING: Failed to generate Smokeping configuration. Smokeping integration may not work properly."
+  fi
 }
 
 check_db_connection

@@ -19,10 +19,13 @@ ADD ${OBSERVIUM_BINARY} ./
 
 WORKDIR /opt/observium
 
-# Don't like the Apple icon ;-) and patch a bug when using file import
-RUN sed -i 's/icon-apple/icon-laptop/g' /opt/observium/html/includes/functions.inc.php || true && \
-    sed -i 's/\($snmp_v3_args\s*=\s*array_slice(\$argv, 4);\)/$snmp_v3_args = array_slice($add, 3);/' ./add_device.php || true && \
-    ln -sf /dev/stdout ./logs/observium.log && \
+# Don't like the Apple icon ;-)
+RUN sed -i 's/icon-apple/icon-laptop/g' /opt/observium/html/includes/functions.inc.php || true
+
+# Patch a bug when using file import
+RUN sed -i 's/\($snmp_v3_args\s*=\s*array_slice(\$argv, 4);\)/$snmp_v3_args = array_slice($add, 3);/' ./add_device.php || true
+
+RUN ln -sf /dev/stdout ./logs/observium.log && \
     chown -R -v www-data:www-data ./
 
 COPY conf/apache2/site.conf /etc/apache2/sites-enabled/000-default.conf
