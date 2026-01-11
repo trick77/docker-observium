@@ -1,6 +1,6 @@
 # docker-observium
 
-[![Docker build](https://github.com/trick77/docker-observium/actions/workflows/build-images.yml/badge.svg)](https://github.com/trick77/docker-observium/actions/workflows/build-images.yml)
+[![Docker build](https://github.com/trick77/docker-observium/actions/workflows/build-images.yaml/badge.svg)](https://github.com/trick77/docker-observium/actions/workflows/build-images.yaml)
 
 This repository delivers [Observium](https://www.observium.org/), a network monitoring powerhouse, in a sleek Dockerized package. Spin up Observium in a flash within a containerized realm for seamless operation.
 
@@ -8,11 +8,10 @@ This repository delivers [Observium](https://www.observium.org/), a network moni
 
 ## Features
 
-- **Molds** Observium's behavior on-the-fly by defining config settings through environment variables in the `observium/.env` file, seamlessly translated to PHP at runtime.
+- **Molds** Observium's behavior on-the-fly by defining config settings through environment variables in the `.env` file, seamlessly translated to PHP at runtime.
 - **Embraces** container-based scheduling wizardry with [Ofelia](https://github.com/mcuadros/ofelia), waving goodbye to the mundane Linux cron jobs.
 - **Bids farewell** to supervisord, reveling in a streamlined setup free from its clutches.
 - **Says no** to log file clutter and rotation headaches – witness everything elegantly flowing to stdout.
-- **Rides** the [Traefik](https://github.com/traefik/traefik) wave for a hassle-free Let's Encrypt certificate ballet, courtesy of a savvy reverse-proxy.
 - **Safeguards** your data with daily backups, ensuring your digital fortress stands resilient.
 - **Feels the pulse** with [Smokeping](https://oss.oetiker.ch/smokeping), adding rhythm to your network monitoring symphony.
 
@@ -25,24 +24,23 @@ contributions, I welcome bugfix pull requests. Hit me up if you spot anything wo
 ## Prerequisites
 
 1. Docker
-1. Traefik reverse proxy (see example configuration provided below)
 1. Devices you want to monitor using SNMP and maybe even Observium's Unix agent
 
 ## Usage
 
-1. Edit `observium/.env` to set passwords and other configuration details
-1. Edit `observium/conf/observium/snmp-devices.txt` to add SNMP devices that should be imported during container startup
+1. Copy `.env.example` to `.env` and set passwords and other configuration details
+1. Copy `observium/conf/observium/snmp-devices.txt.example` to `snmp-devices.txt` and add SNMP devices to import during startup
 1. Start the containers with a single `docker compose up -d` in the base directory
 1. Monitor for errors with `docker compose logs -f`
 
 ## Configuration
 
 To configure Observium's PHP settings using Docker Compose, adhere to the guidelines below.
-Only environment variables in the `observium/.env` file with the `OBSERVIUM__` prefix will be utilized to generate the PHP configuration in the `config.php` file.
+Only environment variables in the `.env` file with the `OBSERVIUM__` prefix will be utilized to generate the PHP configuration in the `config.php` file.
 
 ### Mapping environment variables to Observium's configuration
 
-Add or overwrite Observium settings in the `observium/.env` file using the `OBSERVIUM__` prefix. Follow these mapping instructions:
+Add or overwrite Observium settings in the `.env` file using the `OBSERVIUM__` prefix. Follow these mapping instructions:
 
 | Syntax                          | Description                                                               |
 |---------------------------------|---------------------------------------------------------------------------|
@@ -81,11 +79,7 @@ tip, once the UI is up, check the "Full dump" and "Changed dump" in "Global Sett
 Observium's configuration.
 
 For further details on these configurations and their impact on Observium's behavior, consult the Observium documentation
-or the comments provided in the `observium/.env`  file. Adjust the settings according to your deployment needs.
-
-## Traefik reverse-proxy example
-
-Example was moved to its own repository: [quick-traefik](https://github.com/trick77/quick-traefik)
+or the comments provided in the `.env.example` file. Adjust the settings according to your deployment needs.
 
 ## TODO
 
@@ -95,8 +89,6 @@ Example was moved to its own repository: [quick-traefik](https://github.com/tric
 - [ ] Maybe provide a generate-env.sh to generate the basic settings?
 - [x] Easy variable debugging using the Full Dump menu option in Observium's UI
 - [x] Explain why there is no issues tab for this project
-- [x] Provide a Traefik example since those are somewhat hard to find
-- [x] Show how to create the required traefik network using `docker network traefik create` or something
 - [ ] Add a license
 - [ ] Restore instructions
 - [ ] Updating

@@ -9,6 +9,4 @@ services:
       - smokeping-config:/etc/smokeping/config.d/
     networks:
       - observium
-    labels:
-      com.centurylinklabs.watchtower.enable: "false"
 

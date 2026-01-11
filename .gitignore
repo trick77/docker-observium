@@ -1,3 +1,41 @@
+# Environment and secrets
 **/.env
-**/devices.txt
+**/snmp-devices.txt
+compose.override.yaml
 backup/
+
+# IDE - VS Code
+.vscode/
+
+# IDE - JetBrains (IntelliJ, PyCharm, etc.)
+.idea/
+*.iml
+
+# Agentic coding tools
+AGENTS.md
+.claude/
+.cursor/
+.copilot/
+.aider*
+.codeium/
+.continue/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+ENV/
+
+# Docker
+.docker/
+
+# OS
+.DS_Store
+Thumbs.db
