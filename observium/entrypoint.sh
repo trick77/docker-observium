@@ -7,7 +7,20 @@ if [ "${DEBUG_MODE,,}" == "true" ]; then
   set -o xtrace
 fi
 
+# Validate required environment variables
+required_vars="DB_USER DB_PASSWORD DB_NAME OBSERVIUM_ADMIN_USER OBSERVIUM_ADMIN_PASSWORD"
+for var in $required_vars; do
+  eval value=\$$var
+  if [ -z "$value" ]; then
+    echo "ERROR: Required environment variable $var is not set"
+    exit 1
+  fi
+done
+
 db_hostname=mariadb
+
+# Use MYSQL_PWD to avoid password in process list
+export MYSQL_PWD="${DB_PASSWORD}"
 
 show_observium_info() {
   echo "****************************************************"
@@ -19,15 +32,20 @@ show_observium_info() {
 
 check_db_connection() {
   attempt=0
+  max_attempts=60
   rc=1
-  while [ $rc -ne 0 ]
+  while [ $rc -ne 0 ] && [ $attempt -lt $max_attempts ]
   do
      let attempt++
-     echo "Attempt ${attempt} trying to connect to database..."
-     mariadb --user ${DB_USER} -p${DB_PASSWORD} -D ${DB_NAME} -h ${db_hostname} -e "select 1" > /dev/null
+     echo "Attempt ${attempt}/${max_attempts} trying to connect to database..."
+     mariadb --user ${DB_USER} -D ${DB_NAME} -h ${db_hostname} -e "select 1" > /dev/null 2>&1
      rc=$?
      [ $rc -ne 0 ] && sleep 1
   done
+  if [ $rc -ne 0 ]; then
+    echo "ERROR: Failed to connect to database after ${max_attempts} attempts. Exiting."
+    exit 1
+  fi
   echo "Successfully connected to database!"
 }
 
@@ -36,7 +54,7 @@ set_dir_permissions() {
 }
 
 init_if_required() {
-  tables=$(mariadb --user ${DB_USER} -p${DB_PASSWORD} -D ${DB_NAME} -h ${db_hostname} -e "show tables")
+  tables=$(mariadb --user ${DB_USER} -D ${DB_NAME} -h ${db_hostname} -e "show tables")
   if [ -z "${tables}" ]
   then
      echo "Database schema initialization required..."
@@ -73,10 +91,10 @@ import_snmp_devices() {
 }
 
 import_alert_checks_if_required() {
-  count_alerts=$(mariadb --user ${DB_USER} -p${DB_PASSWORD} -D ${DB_NAME} -h ${db_hostname} -N -B -e "select count(*) from alert_tests")
+  count_alerts=$(mariadb --user ${DB_USER} -D ${DB_NAME} -h ${db_hostname} -N -B -e "select count(*) from alert_tests")
   if [ -z "$count_alerts" -o "$count_alerts" -eq 0 ]; then
     echo "No alert checks found, importing some alert checks..."
-    mariadb --user ${DB_USER} -p${DB_PASSWORD} -D ${DB_NAME} -h ${db_hostname} < /conf/alert-checks.sql
+    mariadb --user ${DB_USER} -D ${DB_NAME} -h ${db_hostname} < /conf/alert-checks.sql
     echo "Successfully imported alert checks"
   else
     echo "Not importing alert checks, checks already exist."
