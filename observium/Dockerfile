@@ -2,7 +2,7 @@ FROM debian:bookworm-slim
 
 ARG PHP_VERSION=8.2
 ARG PYTHON_VERSION=3
-ARG OBSERVIUM_BINARY=observium-community-24.4.tar.gz
+ARG OBSERVIUM_BINARY=observium-community-24.12.tar.gz
 
 RUN apt update && \
     apt -y dist-upgrade && \
