@@ -1,0 +1,20 @@
+name: build
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  docker_image_builds:
+    strategy:
+      matrix:
+        image:
+          - httpd
+          - smokeping
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker Images
+        run: docker compose build ${{ matrix.image }}

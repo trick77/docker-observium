@@ -54,7 +54,7 @@ create_config() {
   export OBSERVIUM__db_name="${DB_NAME}"
   export OBSERVIUM__db_user="${DB_USER}"
   export OBSERVIUM__db_pass="${DB_PASSWORD}"
-  echo "$(php /usr/local/bin/generate-config.php)" > ./config.php
+  python3 /usr/local/bin/generate_config.py > ./config.php
   if [ "$SHOW_GENERATED_CONFIG_DURING_STARTUP" = "yes" ]; then
     echo "Created Observium's config.php with the following settings:"
     cat ./config.php

@@ -1,6 +1,6 @@
 include:
-  - observium/compose.yml
-  - smokeping/compose.yml
+  - observium/compose.yaml
+  - smokeping/compose.yaml
 
 volumes:
   smokeping-data:
