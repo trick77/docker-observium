@@ -10,7 +10,8 @@ fi
 # Validate required environment variables
 required_vars="DB_USER DB_PASSWORD DB_NAME OBSERVIUM_ADMIN_USER OBSERVIUM_ADMIN_PASSWORD"
 for var in $required_vars; do
-  eval value=\$$var
+  # Use indirect expansion instead of eval for security
+  value="${!var}"
   if [ -z "$value" ]; then
     echo "ERROR: Required environment variable $var is not set"
     exit 1
@@ -56,16 +57,56 @@ set_dir_permissions() {
 }
 
 init_if_required() {
-  tables=$(mariadb --user ${DB_USER} -D ${DB_NAME} -h ${db_hostname} -e "show tables")
-  if [ -z "${tables}" ]
-  then
-     echo "Database schema initialization required..."
-     ./discovery.php -u
-     echo "Creating admin user..."
-     ./adduser.php "${OBSERVIUM_ADMIN_USER}" "${OBSERVIUM_ADMIN_PASSWORD}" 10
+  # Use information_schema to reliably count tables (avoids header issues with 'show tables')
+  table_count=$(mariadb --user ${DB_USER} -D ${DB_NAME} -h ${db_hostname} -N -B -e \
+    "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='${DB_NAME}'")
+
+  if [ "$table_count" -eq 0 ]; then
+    echo "Database schema initialization required..."
+
+    # Acquire database lock to prevent concurrent initialization (timeout: 10 seconds)
+    lock_acquired=$(mariadb --user ${DB_USER} -D ${DB_NAME} -h ${db_hostname} -N -B -e \
+      "SELECT GET_LOCK('observium_init', 10)")
+
+    if [ "$lock_acquired" != "1" ]; then
+      echo "ERROR: Failed to acquire database initialization lock. Another container may be initializing."
+      echo "Waiting for initialization to complete..."
+      sleep 5
+
+      # Check again if tables exist (initialization may have completed)
+      table_count=$(mariadb --user ${DB_USER} -D ${DB_NAME} -h ${db_hostname} -N -B -e \
+        "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='${DB_NAME}'")
+
+      if [ "$table_count" -eq 0 ]; then
+        echo "ERROR: Database still not initialized and lock acquisition failed"
+        exit 1
+      else
+        echo "Database initialization completed by another container"
+        ./discovery.php -u
+        return 0
+      fi
+    fi
+
+    # Double-check tables don't exist (race condition protection)
+    table_count=$(mariadb --user ${DB_USER} -D ${DB_NAME} -h ${db_hostname} -N -B -e \
+      "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='${DB_NAME}'")
+
+    if [ "$table_count" -eq 0 ]; then
+      echo "Initializing database schema..."
+      ./discovery.php -u
+      echo "Creating admin user..."
+      ./adduser.php "${OBSERVIUM_ADMIN_USER}" "${OBSERVIUM_ADMIN_PASSWORD}" 10
+      echo "Database initialization complete"
+    else
+      echo "Database already initialized by another process"
+      ./discovery.php -u
+    fi
+
+    # Release the lock
+    mariadb --user ${DB_USER} -D ${DB_NAME} -h ${db_hostname} -N -B -e "SELECT RELEASE_LOCK('observium_init')" > /dev/null
   else
-    echo "Database schema already initialized, no initialization required!"
-     ./discovery.php -u
+    echo "Database schema already initialized (${table_count} tables found)"
+    ./discovery.php -u
   fi
 }
 
@@ -82,7 +123,7 @@ create_config() {
 
   while [ $attempt -lt $max_attempts ] && [ $success -eq 0 ]; do
     let attempt++
-    if python3 /usr/local/bin/generate_config.py > ./config.php 2>/dev/null; then
+    if python3 /usr/local/bin/generate_config.py > ./config.php; then
       success=1
       echo "Configuration generated successfully!"
     else

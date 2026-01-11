@@ -17,7 +17,10 @@ Example:
     OBSERVIUM__bad_if__0=docker0       -> $config['bad_if'][0] = 'docker0';
 """
 
+from __future__ import annotations
+
 import os
+import sys
 from typing import Union
 
 
@@ -39,12 +42,24 @@ def replace_triple_underscores(key: str) -> str:
 def convert_value(value: str) -> Union[bool, int, str]:
     """Convert string value to appropriate Python type for PHP output."""
     lower_value = value.lower()
+
+    # Boolean conversion
     if lower_value == "true":
         return True
     elif lower_value == "false":
         return False
-    elif value.isdigit() or (value.startswith("-") and value[1:].isdigit()):
-        return int(value)
+
+    # Integer conversion - more robust than isdigit()
+    # Handles negative numbers and rejects leading zeros (except "0" itself)
+    if value and (value[0].isdigit() or (value[0] == '-' and len(value) > 1)):
+        try:
+            # Don't convert if it has leading zeros (except "0" itself)
+            if value != "0" and value.lstrip('-')[0] == '0':
+                return value  # Keep as string - likely intentional
+            return int(value)
+        except ValueError:
+            pass  # Not a valid integer, return as string
+
     return value
 
 
@@ -86,7 +101,11 @@ def to_php_value(value: Union[bool, int, str, dict], indent: int = 0) -> str:
     elif isinstance(value, int):
         return str(value)
     elif isinstance(value, str):
+        # Properly escape for PHP single-quoted strings
+        # Order matters: backslashes first, then single quotes
         escaped = value.replace("\\", "\\\\").replace("'", "\\'")
+        # Also escape newlines and other special characters
+        escaped = escaped.replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")
         return f"'{escaped}'"
     elif isinstance(value, dict):
         if not value:
@@ -100,7 +119,9 @@ def to_php_value(value: Union[bool, int, str, dict], indent: int = 0) -> str:
 
         return "array(\n" + ",\n".join(items) + f",\n{indent_str})"
     else:
-        return f"'{value}'"
+        # Fallback for unexpected types
+        print(f"WARNING: Unexpected value type {type(value)} for value: {value}", file=sys.stderr)
+        return f"'{str(value)}'"
 
 
 def generate_php_config(config: dict) -> str:
@@ -114,9 +135,26 @@ def generate_php_config(config: dict) -> str:
 
 
 def main():
-    env_vars = get_env_by_prefix("OBSERVIUM__")
-    config = parse_config(env_vars)
-    print(generate_php_config(config), end="")
+    """Main entry point for config generation."""
+    try:
+        env_vars = get_env_by_prefix("OBSERVIUM__")
+
+        if not env_vars:
+            print("WARNING: No OBSERVIUM__ environment variables found", file=sys.stderr)
+            # Still generate minimal config with empty customConfig
+            config = {}
+        else:
+            print(f"INFO: Processing {len(env_vars)} OBSERVIUM__ environment variables", file=sys.stderr)
+            config = parse_config(env_vars)
+
+        php_config = generate_php_config(config)
+        print(php_config, end="")
+
+    except Exception as e:
+        print(f"ERROR: Failed to generate config: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc(file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

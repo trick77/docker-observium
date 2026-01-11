@@ -11,6 +11,6 @@ RUN mkdir /run/smokeping
 VOLUME /var/lib/smokeping /etc/smokeping/config.d
 
 COPY entrypoint.sh /usr/local/bin/
-ENTRYPOINT entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 
